@@ -1,10 +1,9 @@
-function bw = bwfunc(re, bflag)
-bflag = 1;
-flag = 0;
+function bw = bwfunc(re)
+mm = 1;
 m =mean2(re);
 s = std2(re);
 maxv = max(re(:));
-switch bflag
+switch mm
     case 1
         T = m + 0.5*(maxv - m);
     case 2
@@ -15,7 +14,4 @@ switch bflag
         T = m+ ratio*s;
 end
 bw = re> T;
-if flag
-    figure; imshow(bw);
-end
 end
