@@ -3,7 +3,7 @@ function [re, re1, re2] = lrfunc(img)
 [row,col] = size(img);
 img = double(img);
 sita = zeros(row, col, 12);
-pad = padarray(img, [6, 6], 'symmetric');
+pad = padarray(img, [6, 6], 'replicate');
 for p=1:12;
     seta=p*pi/6;
     x2 = repmat(1:col, row, 1) + 6 + 2*cos(seta);     x2 = round(x2);
@@ -39,12 +39,12 @@ for p=1:12;
 end
 back=max(sita, [], 3);
 re1 = double(img)-back;
-re = (re1 - mean2(re1)).^2;
+re = (re1 - mean2(re1)).^2; %  论文里的结果
 %%
 re2 = re1;
 re2(re2<0) = 0; % 论文里没有这个步骤
 if 0
-    figure; imshow(uint8(img));
+    figure; imshow(uint8(img)); title('original image');
     hold on;
     [y,x] = find(img == min(img(:)));
     plot(x, y, 'rs');
@@ -52,8 +52,8 @@ if 0
     img(y, x)
     back(y, x)
     figure; imshow(back, []);
-    figure; imshow(re, []);
-    figure; imshow(re1, []);
-    figure; imshow(re2, []);
+    figure; imshow(re, []); title('re'); 
+    figure; imshow(re1, []); title('re1');
+    figure; imshow(re2, []); title('re2');
 end
 end

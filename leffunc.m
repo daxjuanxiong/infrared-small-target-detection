@@ -1,4 +1,5 @@
-% Infrared Small Target Detection Based on Multiscale Local Contrast Measure Using Local Energy Factor
+% 2019 Infrared Small Target Detection Based on Multiscale Local Contrast Measure Using Local Energy Factor
+% local dissimilarity and local brightness difference
 function re = leffunc(img)
 img = double(img);
 alfa = 0.5;
@@ -73,7 +74,7 @@ imgm = imfilter(img, op, 'symmetric');
 d = img - imgm;
 %% s
 s = zeros(row, col);
-pad = padarray(img, [len + leny, len + lenx], 'symmetric');
+pad = padarray(img, [len + leny, len + lenx], 'replicate');
 for ii = 1:row
     for jj =1:col
         ii1 = ii + len + leny;
@@ -83,6 +84,7 @@ for ii = 1:row
     end
 end
 end
+
 function  s= blockfunc(block, len)
 x1 = block(1:len, 1:len); x1 = x1(:);
 x2 = block(1:len, len+1:len*2); x2 = x2(:);

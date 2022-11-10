@@ -1,4 +1,4 @@
-%  Tiny and Dim Infrared Target Detection Based on Weighted Local Contrast
+%  2018 Tiny and Dim Infrared Target Detection Based on Weighted Local Contrast
 % 1 目标与背景的对比度
 % 2 目标与背景边缘的不连续性
 function re = amwlcmfunc(img)
@@ -49,7 +49,6 @@ end
 end
 
 function re = subfunc(img, ry, rx)
-
 [row, col] = size(img);
 if mod(ry, 2) ==1
     ylen1 =  floor( ry/2);
@@ -65,16 +64,16 @@ else
     xlen1 =  floor( rx/2) - 1;
     xlen2 = floor( rx/2);
 end
-pad = padarray(img, [ylen1, xlen1], 'symmetric', 'pre');
-pad = padarray(pad, [ylen2, xlen2], 'symmetric', 'post');
+pad = padarray(img, [ylen1, xlen1], 'replicate', 'pre');
+pad = padarray(pad, [ylen2, xlen2], 'replicate', 'post');
 opin = zeros(ry, rx);
 opin(2:end-1,2:end-1) = 1;
 opin = opin/sum(opin(:));
 opout = ones(ry, rx);
 opout(2:end-1,2:end-1) = 0;
 opout = opout/sum(opout(:));
-ain = imfilter(img, opin, 'symmetric');
-aout = imfilter(img, opout, 'symmetric');
+ain = imfilter(img, opin, 'replicate');
+aout = imfilter(img, opout, 'replicate');
 %% 计算目标与背景的对比度
 D = abs(ain - aout); 
 Dmax = max(D(:));

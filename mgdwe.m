@@ -1,20 +1,20 @@
-% Infrared Small-Target Detection Using Multiscale Gray Difference Weighted Image Entropy
+% 2016 Infrared Small-Target Detection Using Multiscale Gray Difference Weighted Image Entropy
 function re = mgdwe(img)
 %%  计算multiscale gray difference有效果，
-%%  但是灰度级变化距离的边缘会产生虚警
+%%  但是在图像中的边缘处会产生虚警
 img = double(img);
 [row, col]=size(img);
-L = 7; %
+L = 7; 
 opb = ones(L);
 opb = opb/sum(opb(:));
-Nb = imfilter(double(img), opb, 'symmetric');
+Nb = imfilter(double(img), opb, 'replicate');
 kmax = (L-1)/2;
 D = zeros(row, col, kmax);
 for ii=1:kmax;  %k为半径
     k1=2*ii+1;
     opk =  ones(k1);
     opk = opk/sum(opk(:));
-    Nk=imfilter(double(img), opk, 'symmetric');
+    Nk=imfilter(double(img), opk, 'replicate');
     D(:,:,ii)=(Nk - Nb).^2;
 end
 D=max(D, [], 3);
@@ -22,7 +22,7 @@ D=max(D, [], 3);
 %% 越是灰度值均匀的地方，熵的值越大
 %% 越是灰度值不均匀的地方，熵的值越小。
 r = 2; % 这个参数论文中并没有给出
-pad = padarray(img, [r, r], 'symmetric', 'both');
+pad = padarray(img, [r, r], 'replicate', 'both');
 E = zeros(row, col);
 for ii=1:row
     for jj=1:col
@@ -30,8 +30,8 @@ for ii=1:row
         v = jj + r;
         block = pad(u-r:u+r, v-r:v+r);
         % method 1: 不太容易理解
-        bh1 = hist(block(:), 0:255);
-        bh2 = (bh1>0).*[0: 255]/sum(bh1.*[0:255]); % 概率
+        bh1 = hist(block(:), 0:255); % 灰度直方图
+        bh2 = (bh1>0).*[0: 255]/sum(bh1.*[0:255]); % 灰度值的概率
         ind = find(bh2);
         bh3 = (bh1).*[0: 255]/sum(bh1.*[0:255]); % 概率
         val = -sum(bh3(ind) .* log2(bh2(ind)) );% Compute entropy
